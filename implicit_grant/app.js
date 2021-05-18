@@ -9,6 +9,11 @@
 
 var express = require('express'); // Express web server framework
 var app = express();
+var ejsLayouts = require('express-ejs-layouts');
+
+
+app.use(ejsLayouts);
 app.use(express.static(__dirname + '/public'));
+app.set('view engine', 'ejs');
 console.log('Listening on 8888');
 app.listen(8888);

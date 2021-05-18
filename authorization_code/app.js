@@ -12,10 +12,15 @@ var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+var ejsLayouts = require('express-ejs-layouts');
 
-var client_id = 'CLIENT_ID'; // Your client id
-var client_secret = 'CLIENT_SECRET'; // Your secret
-var redirect_uri = 'REDIRECT_URI'; // Your redirect uri
+var client_id = 'eb099e19ede240439bd811f62cc075ec'; // Your client id
+var client_secret = '8a73623e6d9f4567a8550641dfa5f5d7'; // Your secret
+var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+
+
+
+
 
 /**
  * Generates a random string containing numbers and letters
@@ -36,6 +41,7 @@ var stateKey = 'spotify_auth_state';
 
 var app = express();
 
+app.use(ejsLayouts);
 app.use(express.static(__dirname + '/public'))
    .use(cors())
    .use(cookieParser());
@@ -133,6 +139,12 @@ app.get('/refresh_token', function(req, res) {
     json: true
   };
 
+
+  app.get('./views', function(req, res) {//route to index.ejs file
+    res.render('index');
+  });
+
+
   request.post(authOptions, function(error, response, body) {
     if (!error && response.statusCode === 200) {
       var access_token = body.access_token;
@@ -142,6 +154,8 @@ app.get('/refresh_token', function(req, res) {
     }
   });
 });
+
+app.set('view engine', 'ejs');
 
 console.log('Listening on 8888');
 app.listen(8888);
